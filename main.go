@@ -36,7 +36,11 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("ui/")))
 	http.HandleFunc("/ws", serveWs)
 
-	if err := http.ListenAndServe(":1234", nil); err != nil {
-		log.Fatal("ListenAndServe:", err)
+	srv := &http.Server{
+		Addr:         "127.0.0.1:1234",
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
 	}
+
+	log.Fatal(srv.ListenAndServe())
 }
