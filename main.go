@@ -33,8 +33,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
-	http.Handle("/", http.FileServer(http.Dir("/")))
+	http.Handle("/", http.FileServer(http.Dir("ui/")))
 	http.HandleFunc("/ws", serveWs)
 
 	if err := http.ListenAndServe(":1234", nil); err != nil {
