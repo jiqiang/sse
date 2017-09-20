@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 )
 
@@ -33,10 +34,12 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.Handle("/", http.FileServer(http.Dir("ui/")))
-	http.HandleFunc("/ws", serveWs)
+	r := mux.NewRouter()
+	r.HandleFunc("/ws", serveWs)
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("ui/"))))
 
 	srv := &http.Server{
+		Handler:      r,
 		Addr:         "127.0.0.1:1234",
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
